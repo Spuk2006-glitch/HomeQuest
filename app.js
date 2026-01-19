@@ -42,12 +42,11 @@ app.use(methodOverride("_method"))
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-const store=MongoStore.create({
-    mongoUrl:dbUrl,
-    crypto:{
-        secret:process.env.SECRET,
-    },
-    touchAfter:24*3600, 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 3600,
+    autoRemove: "native",
+    stringify: false,
 });
 
 store.on("error",()=>{
@@ -103,11 +102,19 @@ app.use("/",userRouter);
 app.get("/", (req, res) => {
     res.redirect("/listings"); 
 });
+app.get("/about", (req, res) => {
+    res.render("about");
+});
+
+app.get("/privacy", (req, res) => {
+    res.render("privacy");
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
-app.listen(8080,()=>{
-    console.log("server is listening to port 8080");
-});
+// app.listen(8080,()=>{
+//     console.log("server is listening to port 8080");
+// });
